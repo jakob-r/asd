@@ -1,0 +1,17 @@
+0c489943accfa195961b10965c7979f5 *DESCRIPTION
+be4d6e9b4f6d93ca52cbd19f0f591608 *NAMESPACE
+954bb7aaa79b70dabdfa3bf8c7bcbe97 *R/asd.sim.R
+1e597f0be139b4274ee61ad8f79247ff *R/combn.test.R
+dfa2582057ebde5d60bcc1a9c6de9b72 *R/dunnett.test.R
+6ea295461f9e391a6516a689a4298d67 *R/gasd.sim.R
+eab08c14f76f97175a18a2e6e235ee4a *R/hyp.test.R
+2bc582e1e29199e9a93d5475e84810a8 *R/select.rule.R
+cc795ffa2947a0c70707396840514101 *R/simeans.binormal.R
+9e1aaa065eca5083f2ecf23cec79bb69 *man/asd-package.Rd
+d60d7e3a2109076ea7bc0767afb6b4f4 *man/asd.sim.Rd
+780d1ec6cc38f41d4921bb041cd8a6e5 *man/combn.test.Rd
+5799a49f563338b2b0b9d0924d450e76 *man/dunnett.test.Rd
+e15958c611a1ad3257648c29c2a7f41e *man/gasd.sim.Rd
+93e302ea73ac410d54b8482673d58777 *man/hyp.test.Rd
+805e6e2a0340c6337bba0ce29432eb4a *man/select.rule.Rd
+7a4e4edc13ebc630dad79efc3f34b7fd *man/simeans.binormal.Rd
