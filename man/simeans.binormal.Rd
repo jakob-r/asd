@@ -11,13 +11,13 @@ simeans.binormal(n = n, means = means, vars = vars, corr = corr)
 }
 \arguments{
   \item{n}{
-Number of records used to calculate means.
+Number of records used to calculate means
 }
   \item{means}{
-Vector of expected means for two samples.
+Vector of expected means for two samples
 }
   \item{vars}{
-Vector of expected variances for two samples.
+Vector of expected variances for two samples
 }
   \item{corr}{
 Correlation between two samples
@@ -27,14 +27,14 @@ Correlation between two samples
 Uses function \code{rmvnorm} from package \code{mvtnorm} to generate means from correlated normal variates.
 }
 \value{
- \item{samp1}{Mean of sample 1.}
- \item{samp2}{Mean of sample 2.}
+ \item{samp1}{Mean of sample 1}
+ \item{samp2}{Mean of sample 2}
 }
 \author{
 Nick Parsons (\email{nick.parsons@warwick.ac.uk})
 }
 \seealso{
-\code{\link{asd.sim}}, \code{\link{gasd.sim}}, \code{\link{dunnett.test}}, \code{\link{hyp.test}}, \code{\link{select.rule}}, \code{\link{combn.test}}
+\code{\link{treatsel.sim}}, \code{\link{dunnett.test}}, \code{\link{hyp.test}}, \code{\link{select.rule}}, \code{\link{combn.test}}
 }
 \examples{
 

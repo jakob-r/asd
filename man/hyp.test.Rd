@@ -11,22 +11,22 @@ hyp.test(comb.test, level = level, full.hyp = FALSE)
 }
 \arguments{
   \item{comb.test}{
-Output from function \code{combn.test}.
+Output from function \code{combn.test}
 }
   \item{level}{
-Test level (default=0.025).
+Test level (default=0.025)
 }
   \item{full.hyp}{
-Logical indicating whether the full set of intersection hypotheses should be reported. Default is FALSE.
+Logical indicating whether the full set of intersection hypotheses should be reported; default \code{FALSE}
 }
 }
 \details{
 In order to control the familywise type I error rate in the strong sense at the pre-specified level \eqn{\alpha} the closure principle (Marcus \emph{et al.}, 1976) is applied. This means that an individual null hypothesis is rejected if and only if all intersection hypotheses are also rejected at level \eqn{\alpha}.
 }
 \value{
- \item{reject}{Matrix indicating whether elementary hypotheses have been rejected.}
- \item{all.rejects}{Matrix indicating rejections for each intersection hypothesis, if \code{full.hyp}=TRUE.}
- \item{all.hyp}{Matrix labelling each intersection hypothesis, if \code{full.hyp}=TRUE.}
+ \item{reject}{Matrix indicating whether elementary hypotheses have been rejected}
+ \item{all.rejects}{Matrix indicating rejections for each intersection hypothesis, if \code{full.hyp}=\code{TRUE}}
+ \item{all.hyp}{Matrix labelling each intersection hypothesis, if \code{full.hyp}=\code{TRUE}}
 }
 \references{
 Marcus R, Peritz E, Gabriel KR. On closed testing procedures with special reference to ordered analysis of variance. \emph{Biometrika} 1976;63:655-660.\cr
@@ -36,7 +36,7 @@ Marcus R, Peritz E, Gabriel KR. On closed testing procedures with special refere
 Nick Parsons (\email{nick.parsons@warwick.ac.uk})
 }
 \seealso{
-\code{\link{asd.sim}}, \code{\link{gasd.sim}}, \code{\link{dunnett.test}}, \code{\link{combn.test}}, \code{\link{select.rule}}, \code{\link{simeans.binormal}}
+\code{\link{treatsel.sim}},\code{\link{dunnett.test}}, \code{\link{combn.test}}, \code{\link{select.rule}}, \code{\link{simeans.binormal}}
 }
 \examples{
 

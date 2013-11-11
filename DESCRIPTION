@@ -1,15 +1,15 @@
 Package: asd
 Type: Package
 Title: Simulations for adaptive seamless designs
-Version: 1.0
-Date: 2009-12-04
-Author: Nick parsons
+Version: 2.0
+Date: 2013-11-11
+Author: Nick Parsons
 Maintainer: Nick Parsons <nick.parsons@warwick.ac.uk>
 Depends: mvtnorm
-Description: Package runs simulations for adaptive seamless designs
-        using early outcomes for treatment selection.
-License: GPL-2
-LazyLoad: yes
-Packaged: 2012-10-29 08:58:14 UTC; ripley
+Description: Package runs simulations for adaptive seamless designs with and without early outcomes 
+                           for treatment selection and subpopulation type designs.
+License: GPL-3
+Packaged: 2013-11-26 13:22:27 UTC; Nick
+NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2012-10-29 08:58:14
+Date/Publication: 2013-11-26 15:11:19

@@ -14,34 +14,34 @@ select.rule(x, type = 0, epsilon = 1, thresh = 1)
 Vector of test statistics.
 }
   \item{type}{
-Decision rule type; 0, 1, 2, 3, 4, 5 or 6. See below for details. Default is 0.
+Decision rule type; 0, 1, 2, 3, 4, 5 or 6 (see below for details); default is 0.
 }
   \item{epsilon}{
-For \code{type} = 4, set epsilon criterion.
+For \code{type} = 4, set epsilon criterion
 }
   \item{thresh}{
-For \code{type} = 6, set threshold criterion.
+For \code{type} = 6, set threshold criterion
 }
 }
 \details{
 There are seven types of selction rule available:\cr
-(0) Select all treatments.\cr
-(1) Select one treatment; largest value of \code{x}.\cr
-(2) Select two treatments; two largest values of \code{x}.\cr
-(3) Select three treatments; three largest values of \code{x}.\cr
-(4) Epsilon rule; select all \code{x} within \code{epsilon} of maximum.\cr
-(5) Randomly select one treatment.\cr
-(6) Threshold rule; select all \code{x} larger than \code{thresh}.\cr
+(0) Select all treatments\cr
+(1) Select one treatment; largest value of \code{x}\cr
+(2) Select two treatments; two largest values of \code{x}\cr
+(3) Select three treatments; three largest values of \code{x}\cr
+(4) Epsilon rule; select all \code{x} within \code{epsilon} of maximum\cr
+(5) Randomly select one treatment\cr
+(6) Threshold rule; select all \code{x} larger than \code{thresh}\cr
 }
 \value{
- \item{select}{Indicator vector that shows treatments selected (1) or not selected (0).}
- \item{z}{Vector of same length as \code{select} set to -Inf if not selected and 0 otherwise. For use with function \code{dunnett.test}.}
+ \item{select}{Indicator vector that shows treatments selected (1) or not selected (0)}
+ \item{z}{Vector of same length as \code{select} set to -Inf if not selected and 0 otherwise. For use with function \code{dunnett.test}}
 }
 \author{
 Nick Parsons (\email{nick.parsons@warwick.ac.uk})
 }
 \seealso{
-\code{\link{asd.sim}}, \code{\link{gasd.sim}}, \code{\link{dunnett.test}}, \code{\link{hyp.test}}, \code{\link{combn.test}}, \code{\link{simeans.binormal}}
+\code{\link{treatsel.sim}}, \code{\link{dunnett.test}}, \code{\link{hyp.test}}, \code{\link{combn.test}}, \code{\link{simeans.binormal}}
 }
 \examples{
 
