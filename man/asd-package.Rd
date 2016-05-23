@@ -12,8 +12,8 @@ In setting (ii) an interim analysis is undertaken using an early outcome measure
 \tabular{ll}{
 Package: \tab asd\cr
 Type: \tab Package\cr
-Version: \tab 2.0\cr
-Date: \tab 2013-11-11\cr
+Version: \tab 2.2\cr
+Date: \tab 2016-05-23\cr
 License: \tab GPL-3\cr
 }
 Simulations are run using the functions (i) \code{\link{treatsel.sim}} and (ii) \code{\link{subpop.sim}}. The other functions are not generally to be called by the user.

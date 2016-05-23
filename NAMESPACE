@@ -1,7 +1,14 @@
-# Export all names
-exportPattern(".")
-
-# Import all packages listed as Imports or Depends
-import(
-  mvtnorm
-)
+exportPattern("^[[:alpha:]]+")
+importFrom("mvtnorm", "rmvnorm")
+importFrom("mvtnorm", "pmvnorm")
+importFrom("mvtnorm", "qmvnorm")
+importFrom("mvtnorm", "qmvnorm")
+importFrom("stats", "dnorm")
+importFrom("stats", "pnorm")
+importFrom("stats", "qnorm")
+importFrom("stats", "pchisq")
+importFrom("stats", "rnorm")
+importFrom("stats", "rbinom")
+importFrom("stats", "runif")
+importFrom("stats", "integrate")
+importFrom("utils", "combn")

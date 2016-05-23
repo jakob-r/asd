@@ -1,5 +1,5 @@
-548698e5e9ecdeaee6e0151e2c921289 *DESCRIPTION
-ff9b5c533c338ce0532f0793ffa21d47 *NAMESPACE
+4b7049fc9a89d6dbc99016d78bf24582 *DESCRIPTION
+03d003ab8a60069606fe835e3e872f65 *NAMESPACE
 d2ed3247cad59486d9ccfe6c9616dd9e *R/combn.test.R
 94432fb4a6d964ab02faee1248f15303 *R/dunnett.test.R
 2ea68652c2e13150d9782fd9f42ce3e6 *R/gsubpop.sim.R
@@ -9,11 +9,11 @@ d0efc30faee8d293675b9c2741879f30 *R/hyp.test.R
 8ede861d93252a1303206380c1ea2fcd *R/simeans.binormal.R
 e25aa7c29a2b2b437282dd8deb4dc172 *R/subpop.sim.R
 b345478c8c9ac47aef0b12f00d9be7bc *R/treatsel.sim.R
-c9208ba308fd95e7cfbfd4900caa4fd8 *man/asd-package.Rd
+951c7c7ec76b669b8cef943f81a50860 *man/asd-package.Rd
 7264e52944eaa12c1f076d5e963251a6 *man/combn.test.Rd
 6f0f94fafdea5a7ab499a2a39ec56707 *man/dunnett.test.Rd
-46ddec8b92f1438ddb01b4357a1c3763 *man/gsubpop.sim.Rd
-9d2f4ff2726082a9a21f015a6a52d950 *man/gtreatsel.sim.Rd
+b12a5dc91de18bb9436c97e4b336014d *man/gsubpop.sim.Rd
+15e050b565e99771f12b45853be0a30e *man/gtreatsel.sim.Rd
 723905e9762e7359cb244f6fc24e3c99 *man/hyp.test.Rd
 a8876689cae5c8e80f76f670305ef37b *man/select.rule.Rd
 410272a4efe1370e191534de3db97a38 *man/simeans.binormal.Rd
