@@ -1,120 +1,140 @@
-treatsel.sim <-
-function(n=list(stage1=32,stage2=32),effect=list(early=c(0,0,0),final=c(0,0,0)),
-           outcome=list(early="N",final="N"),nsim=1000,corr=0,seed=12345678,select=0,epsilon=1,
-           weight=NULL,thresh=1,level=0.025,ptest=c(1),method="invnorm",fu=FALSE,file=""){
+treatsel.sim <- function(n=list(stage1=32,stage2=32),effect=list(early=c(0,0,0),final=c(0,0,0)), outcome=list(early="N",final="N"),nsim=1000,corr=0,seed=12345678,select=0,epsilon=1, weight=NULL,thresh=1,level=0.025,ptest=c(1),method="invnorm",fu=FALSE,file=""){
 
-# outcome functions
-time.out <- function(effect,n,standard=TRUE,method="exponential"){
- t.stat <- log(effect)-log(effect[1])
- if(method=="exponential"){
-  n.event <- n*(1-exp(-effect))
- }
- var.tstat <-  4/(n.event[1]+n.event)
- if(standard==TRUE){
-  t.stat <- -t.stat/sqrt(var.tstat)
- }
- var.stat <- rep(1,length(effect))
- return(list(t.stat=t.stat[2:length(t.stat)],var.stat=var.stat))
-}
-normal.out <- function(effect,n){
- effect <- effect-effect[1]
- t.stat <- effect*sqrt(n/2)
- var.tstat <-  rep(1,length(effect))
- return(list(t.stat=t.stat[2:length(t.stat)],var.stat=var.tstat))
-}
-binary.out <- function(effect,n,standard=TRUE,method="LOR"){
- n.risk <- rep(n,length(effect))
- n.event <- n*effect
- if(length(n.event)!=length(n.risk)){stop("need to set length n.risk = n.event")}
- if(sum(n.risk>n.event)!=length(n.risk)){stop("need to set n.risk > n.event")}
- lor <- log(n.event/(n.risk-n.event))
- t.stat <- lor[1]-lor
- var.tstat <-  1/n.event[1]+1/(n.risk[1]-n.event[1])+1/n.event+1/(n.risk-n.event)
- if(standard==TRUE){
-  t.stat <- t.stat/sqrt(var.tstat)
- }
- var.stat <- 1/n.event+1/(n.risk-n.event)
- return(list(t.stat=t.stat[2:length(t.stat)],var.stat=var.stat))
-}
+  # outcome functions
+  time.out <- function(effect,n,standard=TRUE,method="exponential"){
+    t.stat <- log(effect)-log(effect[1])
+    if(method=="exponential"){
+      n.event <- n*(1-exp(-effect))
+    }
+    var.tstat <-  4/(n.event[1]+n.event)
+    if(standard==TRUE){
+      t.stat <- -t.stat/sqrt(var.tstat)
+    }
+    var.stat <- rep(1,length(effect))
+    return(list(t.stat=t.stat[2:length(t.stat)],var.stat=var.stat))
+  }
+  normal.out <- function(effect,n){
+    effect <- effect-effect[1]
+    t.stat <- effect*sqrt(n/2)
+    var.tstat <-  rep(1,length(effect))
+    return(list(t.stat=t.stat[2:length(t.stat)],var.stat=var.tstat))
+  }
+  binary.out <- function(effect,n,standard=TRUE,method="LOR"){
+    n.risk <- rep(n,length(effect))
+    n.event <- n*effect
+    if(length(n.event)!=length(n.risk)){stop("need to set length n.risk = n.event")}
+    if(sum(n.risk>n.event)!=length(n.risk)){stop("need to set n.risk > n.event")}
+    lor <- log(n.event/(n.risk-n.event))
+    t.stat <- lor[1]-lor
+    var.tstat <-  1/n.event[1]+1/(n.risk[1]-n.event[1])+1/n.event+1/(n.risk-n.event)
+    if(standard==TRUE){
+      t.stat <- t.stat/sqrt(var.tstat)
+    }
+    var.stat <- 1/n.event+1/(n.risk-n.event)
+    return(list(t.stat=t.stat[2:length(t.stat)],var.stat=var.stat))
+  }
 
-# reporting summary
-report.1 <- function(ss1,ss2,n,ran.seed,rule,epsilon,thresh,method,t.level,ofile) {
- cat("\n",file=ofile,append=TRUE)
- cat("asd: simulations for adaptive seamless designs: v2.0: 11/11/2013","\n",sep="",file=ofile,append=TRUE)
- cat("\n",file=ofile,append=TRUE)
- cat("sample sizes (per arm): stage 1 =",ss1,": stage 2 =",ss2,"\n",sep=" ",file=ofile,append=TRUE)
- cat("simulations: n =",n,"and seed =",ran.seed,"\n",sep=" ",file=ofile,append=TRUE)
- cat("selection rule:",rule,sep=" ",file=ofile,append=TRUE)
- if(rule=="epsilon rule (select within epsilon of maximum)"){
-   cat(" : epsilon =",round(epsilon,3),"\n",file=ofile,append=TRUE)
-  } else if(rule=="threshold rule (select greater than or equal to threshold)"){
-   cat(" : threshold =",round(thresh,3),"\n",file=ofile,append=TRUE)
-  } else {
-   cat("\n",file=ofile,append=TRUE)
- }
-t.level <- paste(as.character(round(100*t.level,1)),"%",sep="")
-cat("method:",method,"and level =",t.level," (one-sided)","\n",sep=" ",file=ofile,append=TRUE)
-}
-report.2 <- function(out.lab,lab,eff.c,eff.t,ofile) {
- cat(out.lab,lab,"control =",eff.c,": treatment(s) =",eff.t,"\n",sep=" ",file=ofile,append=TRUE)
-}
-report.3 <- function(ecorr.lab,fcorr.lab,correl,ofile) {
- cat("correlation: early",ecorr.lab,"and final",fcorr.lab,"=",correl,"\n",sep=" ",file=ofile,append=TRUE)
-}
-report.4 <- function(zearly,z1,z2,weight,ofile) {
- cat("\n",file=ofile,append=TRUE)
- cat("simulation of test statistics:","\n",sep=" ",file=ofile,append=TRUE)
- cat("expectation early =",round(zearly,1),"\n",sep=" ",file=ofile,append=TRUE)
- cat("expectation final stage 1 =",round(z1,1),"and stage 2 =",round(z2,1),"\n",sep=" ",file=ofile,append=TRUE)
- cat("weights: stage 1 =",round(sqrt(weight),2),"and stage 2 =",round(sqrt(1-weight),2),"\n",sep=" ",file=ofile,append=TRUE)
- cat("\n")
-}
-report.5 <- function(sim.res,n,rej.pow,ofile) {
-  cat("number of treatments selected at stage 1:","\n",file=ofile,append=TRUE)
-  cat(format(" ",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-        "\t",format("n",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-        "\t",format("%",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),"\n",file=ofile,append=TRUE)
-  for (i in 1:length(sim.res$count.total)){
-    cat(format(round(i,0),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-     "\t",format(round(sim.res$count.total[i],0),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-     "\t",format(round(100*sim.res$count.total[i]/n,5),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),
-                       "\n",file=ofile,append=TRUE)
+  # reporting summary
+  report.1 <- function(ss1,ss2,n,ran.seed,rule,epsilon,thresh,method,t.level,ofile) {
+    res.1 = list()
+    cat("\n",file=ofile,append=TRUE)
+    cat("asd: simulations for adaptive seamless designs: v2.0: 11/11/2013","\n",sep="",file=ofile,append=TRUE)
+    cat("\n",file=ofile,append=TRUE)
+    cat("sample sizes (per arm): stage 1 =",ss1,": stage 2 =",ss2,"\n",sep=" ",file=ofile,append=TRUE)
+    res.1$sample_sizes = c(stage1 = ss1, stage2 = ss2)
+
+    cat("simulations: n =",n,"and seed =",ran.seed,"\n",sep=" ",file=ofile,append=TRUE)
+    res.1$simulations = c(n = n, seed = ran.seed)
+    
+    cat("selection rule:",rule,sep=" ",file=ofile,append=TRUE)
+    res.1$selection = list(rule = rule)
+
+    if(rule=="epsilon rule (select within epsilon of maximum)"){
+      cat(" : epsilon =",round(epsilon,3),"\n",file=ofile,append=TRUE)
+      res.1$selection$epsilon = epsilon
+    } else if(rule=="threshold rule (select greater than or equal to threshold)"){
+      cat(" : threshold =",round(thresh,3),"\n",file=ofile,append=TRUE)
+      res.1$selection$thresh = thresh
+    } else {
+      cat("\n",file=ofile,append=TRUE)
     }
-  cat(format("Total",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-        "\t",format(sum(sim.res$count.total),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-        "\t",format(round(100*sum(sim.res$count.total)/n,5),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),"\n",file=ofile,append=TRUE)
- cat("\n",file=ofile,append=TRUE)
- cat("treatment selection at stage 1:","\n",file=ofile,append=TRUE)
-  cat(format(" ",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-        "\t",format("n",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-        "\t",format("%",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),"\n",file=ofile,append=TRUE)
-  for (i in 1:length(sim.res$count.total)){
-    cat(format(round(i,0),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-     "\t",format(round(sim.res$select.total[i],0),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-     "\t",format(round(100*sim.res$select.total[i]/n,5),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),
-              "\n",file=ofile,append=TRUE)
-    }
- cat("\n",file=ofile,append=TRUE)
- cat("hypothesis rejection at study endpoint:","\n",file=ofile,append=TRUE)
-  cat(format(" ",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-        "\t",format("n",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-        "\t",format("%",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),"\n",file=ofile,append=TRUE)
-  for (i in 1:length(sim.res$count.total)){
-    cat(format(paste("H",round(i,0),sep=""),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-     "\t",format(round(sim.res$reject.total[i],0),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
-     "\t",format(round(100*sim.res$reject.total[i]/n,5),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),
+    res.1$t.level = t.level
+    res.1$method = method
+    t.level <- paste(as.character(round(100*t.level,1)),"%",sep="")
+    cat("method:",method,"and level =",t.level," (one-sided)","\n",sep=" ",file=ofile,append=TRUE)
+    return(res.1)
+  }
+  report.2 <- function(out.lab,lab,eff.c,eff.t,ofile) {
+    cat(out.lab,lab,"control =",eff.c,": treatment(s) =",eff.t,"\n",sep=" ",file=ofile,append=TRUE)
+    return(list(out.lab = out.lab, lab = lab, control = eff.c, treatments = eff.t))
+  }
+  report.3 <- function(ecorr.lab,fcorr.lab,correl,ofile) {
+    cat("correlation: early",ecorr.lab,"and final",fcorr.lab,"=",correl,"\n",sep=" ",file=ofile,append=TRUE)
+    return(list(correlation.early = ecorr.lab, correlation.final = fcorr.lab, correlation.val = correl))
+  }
+  report.4 <- function(zearly,z1,z2,weight,ofile) {
+    res.4 = list()
+    cat("\n",file=ofile,append=TRUE)
+    cat("simulation of test statistics:","\n",sep=" ",file=ofile,append=TRUE)
+    res.4$expectation.early = zearly
+    cat("expectation early =",round(zearly,1),"\n",sep=" ",file=ofile,append=TRUE)
+    res.4$expectation.final = c(stage1 = z1, stage2 = z2)
+    cat("expectation final stage 1 =",round(z1,1),"and stage 2 =",round(z2,1),"\n",sep=" ",file=ofile,append=TRUE)
+    res.4$weights = c(stage1 = sqrt(weight), stage2 = sqrt(1-weight))
+    cat("weights: stage 1 =",round(sqrt(weight),2),"and stage 2 =",round(sqrt(1-weight),2),"\n",sep=" ",file=ofile,append=TRUE)
+    cat("\n")
+    return(res.4)
+  }
+  report.5 <- function(sim.res,n,rej.pow,ofile) {
+    res.5 = list()
+    cat("number of treatments selected at stage 1:","\n",file=ofile,append=TRUE)
+    cat(format(" ",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+      "\t",format("n",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+      "\t",format("%",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),"\n",file=ofile,append=TRUE)
+    res.5$sim.res = sim.res
+    res.5$sim.res.n = n
+    for (i in 1:length(sim.res$count.total)){
+      cat(format(round(i,0),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+        "\t",format(round(sim.res$count.total[i],0),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+        "\t",format(round(100*sim.res$count.total[i]/n,5),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),
         "\n",file=ofile,append=TRUE)
     }
- cat("\n",file=ofile,append=TRUE)
- for (i in 1:length(rej.pow)){
-  if(i==1){all.hyp <- paste("H",rej.pow[1],sep="")} else if(i>1){
-   all.hyp <- append(all.hyp,paste("H",rej.pow[i],sep=""))
+    cat(format("Total",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+      "\t",format(sum(sim.res$count.total),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+      "\t",format(round(100*sum(sim.res$count.total)/n,5),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),"\n",file=ofile,append=TRUE)
+    cat("\n",file=ofile,append=TRUE)
+    cat("treatment selection at stage 1:","\n",file=ofile,append=TRUE)
+    cat(format(" ",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+      "\t",format("n",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+      "\t",format("%",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),"\n",file=ofile,append=TRUE)
+    for (i in 1:length(sim.res$count.total)){
+      cat(format(round(i,0),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+        "\t",format(round(sim.res$select.total[i],0),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+        "\t",format(round(100*sim.res$select.total[i]/n,5),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),
+        "\n",file=ofile,append=TRUE)
+    }
+    cat("\n",file=ofile,append=TRUE)
+    cat("hypothesis rejection at study endpoint:","\n",file=ofile,append=TRUE)
+    cat(format(" ",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+      "\t",format("n",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+      "\t",format("%",digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),"\n",file=ofile,append=TRUE)
+    for (i in 1:length(sim.res$count.total)){
+      cat(format(paste("H",round(i,0),sep=""),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+        "\t",format(round(sim.res$reject.total[i],0),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=0,width=6),
+        "\t",format(round(100*sim.res$reject.total[i]/n,5),digits=1,trim=TRUE,justify="right",scientific=FALSE,nsmall=2,width=6),
+        "\n",file=ofile,append=TRUE)
+    }
+    cat("\n",file=ofile,append=TRUE)
+    res.5$rej.pow = rej.pow
+    for (i in 1:length(rej.pow)){
+      if(i==1){all.hyp <- paste("H",rej.pow[1],sep="")} else if(i>1){
+        all.hyp <- append(all.hyp,paste("H",rej.pow[i],sep=""))
+      }
+    }
+    all.hyp <- paste(all.hyp,collapse=" and/or ")
+    cat("reject",all.hyp,"=",sim.res$sim.reject,": ",paste(round(100*sim.res$sim.reject/n,3),"%",sep=""),
+      "\n",sep=" ",file=ofile,append=TRUE)
   }
- }
- all.hyp <- paste(all.hyp,collapse=" and/or ")
- cat("reject",all.hyp,"=",sim.res$sim.reject,": ",paste(round(100*sim.res$sim.reject/n,3),"%",sep=""),
-                  "\n",sep=" ",file=ofile,append=TRUE)
-}
 
 
 # validate inputs
@@ -252,19 +272,25 @@ results <- gtreatsel.sim(z1=z1,z2=z2,zearly=zearly,v1=v1,v2=v2,
 
 
 # summarise model
-report.1(ss1=as.integer(n$stage1),ss2=as.integer(n$stage2),n=nsim,ran.seed=seed,
+res.1 = report.1(ss1=as.integer(n$stage1),ss2=as.integer(n$stage2),n=nsim,ran.seed=seed,
                rule=selection.rules[e.select],epsilon=epsilon,thresh=thresh,
                method=comb.method[imeth],t.level=level,ofile=file)
-report.2(out.lab="early outcome:",lab=oearly.lab,
+res.2.early = report.2(out.lab="early outcome:",lab=oearly.lab,
           eff.c=round(effect$early[1],3),eff.t=round(effect$early[2:length(effect$early)],3),ofile=file)
 
-report.2(out.lab="final outcome:",lab=ofinal.lab,
+res.2.final = report.2(out.lab="final outcome:",lab=ofinal.lab,
           eff.c=round(effect$final[1],3),eff.t=round(effect$final[2:length(effect$final)],3),ofile=file)
-report.3(ecorr.lab,fcorr.lab,correl=corr,ofile=file)
-report.4(zearly,z1,z2,weight,ofile=file)
-report.5(results,n=nsim,rej.pow=ptest,ofile=file)
+res.3 = report.3(ecorr.lab,fcorr.lab,correl=corr,ofile=file)
+res.4 = report.4(zearly,z1,z2,weight,ofile=file)
+res.5 = report.5(results,n=nsim,rej.pow=ptest,ofile=file)
 
 # output
-invisible(results)
+invisible(list(
+  res.1 = res.1,
+  res.2.early = res.2.early,
+  res.3.final = res.3.final,
+  res.4 = res.4,
+  res.5 = res.5
+))
 
 }
