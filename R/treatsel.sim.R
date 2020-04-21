@@ -288,7 +288,7 @@ res.5 = report.5(results,n=nsim,rej.pow=ptest,ofile=file)
 invisible(list(
   res.1 = res.1,
   res.2.early = res.2.early,
-  res.3.final = res.3.final,
+  res.3.final = res.2.final,
   res.4 = res.4,
   res.5 = res.5
 ))
