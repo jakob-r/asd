@@ -134,6 +134,7 @@ treatsel.sim <- function(n=list(stage1=32,stage2=32),effect=list(early=c(0,0,0),
     all.hyp <- paste(all.hyp,collapse=" and/or ")
     cat("reject",all.hyp,"=",sim.res$sim.reject,": ",paste(round(100*sim.res$sim.reject/n,3),"%",sep=""),
       "\n",sep=" ",file=ofile,append=TRUE)
+    return(res.5)
   }
 
 
